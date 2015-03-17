@@ -69,6 +69,7 @@
   <ItemGroup>
     <Content Include="assets\images\blueButton.png" />
     <Content Include="assets\images\car.png" />
+    <Content Include="assets\images\enemycar.png" />
     <Content Include="assets\images\road.jpg" />
     <Content Include="css\game.css" />
     <Content Include="index.html" />

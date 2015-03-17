@@ -1,8 +1,13 @@
 ﻿var canvas;
 var stage;
 
-var test;
+var car;
 var background;
+var enemyCarOne;
+var enemyCarTwo;
+
+var posEnemyOne;
+var posEnemyTwo;
 
 // Game Objects
 //var helloText: createjs.Text;
@@ -21,7 +26,7 @@ function init() {
 
     //Add in the background
     background = new createjs.Bitmap("assets/images/road.jpg");
-    background.scaleX = background.scaleY = 3;
+    background.scaleX = background.scaleY = 3.3;
 
     //Add listener for mouse movement
     canvas.addEventListener('mousemove', function (evt) {
@@ -33,36 +38,75 @@ function init() {
     stage.addChild(background);
 
     //TEST
-    test = new createjs.Bitmap("assets/images/car.png");
-    test.regX = 0;
-    test.regY = 0;
-    test.scaleX = .5;
-    test.scaleY = .5;
+    car = new createjs.Bitmap("assets/images/car.png");
+    car.scaleX = .5;
+    car.scaleY = .5;
+    car.y = (480 - car.y);
 
-    // test.scaleX = (stage.canvas.width / test.image.width);
-    // test.scaleY = (stage.canvas.height / test.image.height);
-    stage.addChild(test);
+    enemyCarOne = new createjs.Bitmap("assets/images/enemycar.png");
+    enemyCarOne.scaleX = .5;
+    enemyCarOne.scaleY = .5;
+    enemyCarOne.y = (0);
+
+    enemyCarTwo = new createjs.Bitmap("assets/images/enemycar.png");
+    enemyCarTwo.scaleX = .5;
+    enemyCarTwo.scaleY = .5;
+    enemyCarTwo.y = (0);
+
+    newEnemy(1);
+
+    stage.addChild(car);
 
     main();
 }
 
 //Get the position of the mouse
 function getMousePos(canvas, evt) {
-    var rect = canvas.getBoundingClientRect();
     return {
-        x: evt.clientX - rect.left,
-        y: evt.clientY - rect.top
+        x: evt.clientX,
+        y: evt.clientY
     };
 }
 
 //Moves the players character
 function movePlayer(mousePos) {
-    test.regX = (0 - mousePos.x);
-    test.regY = (0 - mousePos.y);
+    var rect = stage.getBounds();
+
+    console.log("mousePos.x = " + mousePos.x);
+
+    console.log("rect = " + rect.x);
+    console.log("canvas = " + canvas.x);
+
+    //DO BOUNDING
+    car.x = (mousePos.x - 40);
+
+    //test.y = (mousePos.y);
+    //test.x = (mousePos.x - 40);
+    car.y = (480 - car.image.height());
+}
+
+function newEnemy(whichCar) {
+    if (whichCar = 1) {
+        posEnemyOne = Math.floor((Math.random() * 1260) + 1);
+        stage.addChild(enemyCarOne);
+    }
+
+    if (whichCar = 2) {
+        posEnemyTwo = Math.floor((Math.random() * 1260) + 1);
+        stage.addChild(enemyCarTwo);
+    }
 }
 
 function gameLoop() {
-    //   helloText.rotation += 5;
+    if (enemyCarOne.y > 400)
+        newEnemy(2);
+
+    enemyCarOne.y += 5;
+    enemyCarOne.x = posEnemyOne;
+
+    enemyCarTwo.y += 7;
+    enemyCarTwo.x = posEnemyTwo;
+
     stage.update(); // Refreshes our stage
 }
 
