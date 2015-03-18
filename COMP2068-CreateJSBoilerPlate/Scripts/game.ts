@@ -134,6 +134,9 @@ function main() {
 //The Game Loop
 function gameLoop() {
 
+    //Hide the cursor
+    stage.canvas.style.cursor = "none";
+
     if (score >= 200) {
         //Display health
         postWinLoose = new createjs.Text("CONGRADULATIONS, YOU WIN!!", "80px Consolas", "#FFFFFF");
@@ -376,7 +379,7 @@ function loadEnemyCars() {
     enemyCarSix.y = 0;
 
     //Create coin
-    coin = new createjs.Bitmap("assets/images/coin.jpg");
+    coin = new createjs.Bitmap("assets/images/coin.png");
     coin.scaleX = .5;
     coin.scaleY = .5;
     coin.y = 0;
@@ -386,6 +389,8 @@ function loadEnemyCars() {
 //Moves the players character
 function movePlayer(mousePos) {
     var rect = stage.getBounds();
+
+    stage.canvas.style.cursor = "none";
 
     //DO BOUNDING
     car.x = (mousePos.x - 40); 
