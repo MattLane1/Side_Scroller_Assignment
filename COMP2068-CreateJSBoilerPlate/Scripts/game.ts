@@ -8,6 +8,15 @@ var enemyCarTwo: createjs.Bitmap;
 
 var posEnemyOne;
 var posEnemyTwo;
+var posEnemyThree;
+var posEnemyFour;
+var posEnemyFive;
+
+var carOneAlive;
+var carTwoAlive;
+var carThreeAlive;
+var carFourAlive;
+var carFiveAlive;
 
 
 // Game Objects 
@@ -17,6 +26,9 @@ var posEnemyTwo;
 function init() {
     canvas = document.getElementById("canvas");
     stage = new createjs.Stage(canvas);
+
+    carOneAlive = true;
+    carTwoAlive = false;
 
     //Size canvas
     stage.canvas.width = (window.innerWidth - 25);
@@ -49,13 +61,13 @@ function init() {
     enemyCarOne = new createjs.Bitmap("assets/images/enemycar.png");
     enemyCarOne.scaleX = .5;
     enemyCarOne.scaleY = .5;
-    enemyCarOne.y = (0);
+    enemyCarOne.y = 0;
 
     //Create enemy two
     enemyCarTwo = new createjs.Bitmap("assets/images/enemycar.png");
     enemyCarTwo.scaleX = .5;
     enemyCarTwo.scaleY = .5;
-    enemyCarTwo.y = (0);
+    enemyCarTwo.y = 0;
 
     newEnemy(1);
 
@@ -92,50 +104,53 @@ function movePlayer(mousePos) {
 
 function newEnemy(whichCar) {
     if (whichCar == 1) {
+        carOneAlive = true;
+        enemyCarOne.y = 0;
         posEnemyOne = Math.floor((Math.random() * 1260) + 1);
         stage.addChild(enemyCarOne);
     }
 
     if (whichCar == 2) {
+        carTwoAlive = true;
+        enemyCarTwo.y = 0;
         posEnemyTwo = Math.floor((Math.random() * 1260) + 1);
         stage.addChild(enemyCarTwo);
     }
+
+    whichCar = 0;
 }
 
 
 function gameLoop() {
 
-    if (enemyCarOne.y > 400)
-    //   newEnemy(2);
-  
-    enemyCarOne.y += 5;
-    enemyCarOne.x = posEnemyOne;
+    if (enemyCarOne.y >= 800) {
+        newEnemy(2);
+        enemyCarOne.y = -200;
+        carOneAlive = false;
+    }
 
-    enemyCarTwo.y += 7;
-    enemyCarTwo.x = posEnemyTwo;
+    if (enemyCarTwo.y >= 800) {
+        newEnemy(1);
+        enemyCarTwo.y = -200;
+        carTwoAlive = false;
+    }
 
-    console.log("enemyCarTwo.x = " + enemyCarTwo);
-    console.log("enemyCarOne.x = " + enemyCarOne);
+    if (carOneAlive == true) {
+        enemyCarOne.y += 15;
+        enemyCarOne.x = posEnemyOne;
+    }
+
+    if (carTwoAlive == true) {
+        enemyCarTwo.y += 15;
+        enemyCarTwo.x = posEnemyTwo;
+    }
+
+    console.log("enemyCarTwo.x = " + posEnemyTwo);
+    console.log("enemyCarOne.x = " + posEnemyOne);
    
     stage.update(); // Refreshes our stage
 }
-/*
-// Event handlers
-function buttonClicked() {
-    helloText.text = "Good Bye";
-    helloText.regX = helloText.getBounds().width * 0.5;
-    helloText.regY = helloText.getBounds().height * 0.5;
-    
-}
 
-function buttonOut() {
-    button.alpha = 1.0;
-}
-
-function buttonOver() {
-    button.alpha = 0.5;
-}
-*/
 
 
 
