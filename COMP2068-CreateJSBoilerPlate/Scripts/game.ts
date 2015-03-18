@@ -39,17 +39,19 @@ function init() {
     //Add the background to the stage
     stage.addChild(background); 
 
-    //TEST 
+    //Create player controlled car
     car = new createjs.Bitmap("assets/images/car.png");
     car.scaleX = .5;
     car.scaleY = .5;
     car.y = (480 - car.y);
 
+    //Create enemy one
     enemyCarOne = new createjs.Bitmap("assets/images/enemycar.png");
     enemyCarOne.scaleX = .5;
     enemyCarOne.scaleY = .5;
     enemyCarOne.y = (0);
 
+    //Create enemy two
     enemyCarTwo = new createjs.Bitmap("assets/images/enemycar.png");
     enemyCarTwo.scaleX = .5;
     enemyCarTwo.scaleY = .5;
@@ -89,12 +91,12 @@ function movePlayer(mousePos) {
 }
 
 function newEnemy(whichCar) {
-    if (whichCar = 1) {
+    if (whichCar == 1) {
         posEnemyOne = Math.floor((Math.random() * 1260) + 1);
         stage.addChild(enemyCarOne);
     }
 
-    if (whichCar = 2) {
+    if (whichCar == 2) {
         posEnemyTwo = Math.floor((Math.random() * 1260) + 1);
         stage.addChild(enemyCarTwo);
     }
@@ -104,13 +106,16 @@ function newEnemy(whichCar) {
 function gameLoop() {
 
     if (enemyCarOne.y > 400)
-        newEnemy(2);
+    //   newEnemy(2);
   
     enemyCarOne.y += 5;
     enemyCarOne.x = posEnemyOne;
 
     enemyCarTwo.y += 7;
     enemyCarTwo.x = posEnemyTwo;
+
+    console.log("enemyCarTwo.x = " + enemyCarTwo);
+    console.log("enemyCarOne.x = " + enemyCarOne);
    
     stage.update(); // Refreshes our stage
 }
