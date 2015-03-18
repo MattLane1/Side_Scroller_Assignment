@@ -180,63 +180,70 @@ function manageColisions() {
 
     //Get enemy locations
     enemyOneRect = enemyCarOne.getTransformedBounds();
-    enemyTwoRect = enemyCarOne.getTransformedBounds();
-    enemyThreeRect = enemyCarOne.getTransformedBounds();
-    enemyFourRect = enemyCarOne.getTransformedBounds();
-    enemyFiveRect = enemyCarOne.getTransformedBounds();
-    enemySixRect = enemyCarOne.getTransformedBounds();
+    enemyTwoRect = enemyCarTwo.getTransformedBounds();
+    enemyThreeRect = enemyCarThree.getTransformedBounds();
+    enemyFourRect = enemyCarFour.getTransformedBounds();
+    enemyFiveRect = enemyCarFive.getTransformedBounds();
+    enemySixRect = enemyCarSix.getTransformedBounds();
 
     //Get coins location
     coinRect = coin.getTransformedBounds();
 
+    //Picked up a coin?
+    if (carRect.x < coinRect.x + coinRect.width && carRect.x + carRect.width > coinRect.x && carRect.y < coinRect.y + coinRect.height && carRect.height + carRect.y > coinRect.y && coinAlive == true) {
+        //Coin picked up!
+        score += 25;
+        updateHealthOrScore();
+        coinAlive = false;
+        coin.y = -200;
+    }
+
     //Car one collision detection
-    if (hitTestPoint(carRect.x, carRect.y, carRect.width, carRect.height, enemyOneRect.x, enemyOneRect.y) == true && carOneHit == false) {
+    if (carRect.x < enemyOneRect.x + enemyOneRect.width && carRect.x + carRect.width > enemyOneRect.x && carRect.y < enemyOneRect.y + enemyOneRect.height && carRect.height + carRect.y > enemyOneRect.y && carOneHit == false) {
+        //Car hit!
         hp -= 25;
         updateHealthOrScore();
         carOneHit = true;
     }
 
     //Car Two collision detection
-    if (hitTestPoint(carRect.x, carRect.y, carRect.width, carRect.height, enemyTwoRect.x, enemyTwoRect.y) == true && carTwoHit == false) {
+    if (carRect.x < enemyTwoRect.x + enemyTwoRect.width && carRect.x + carRect.width > enemyTwoRect.x && carRect.y < enemyTwoRect.y + enemyTwoRect.height && carRect.height + carRect.y > enemyTwoRect.y && carTwoHit == false) {
+        //Car hit!
         hp -= 25;
         updateHealthOrScore();
         carTwoHit = true;
     }
 
     //Car Three collision detection
-    if (hitTestPoint(carRect.x, carRect.y, carRect.width, carRect.height, enemyThreeRect.x, enemyThreeRect.y) == true && carThreeHit == false) {
+    if (carRect.x < enemyThreeRect.x + enemyThreeRect.width && carRect.x + carRect.width > enemyThreeRect.x && carRect.y < enemyThreeRect.y + enemyThreeRect.height && carRect.height + carRect.y > enemyThreeRect.y && carThreeHit == false) {
+        //Car hit!
         hp -= 25;
         updateHealthOrScore();
         carThreeHit = true;
     }
 
     //Car Four collision detection
-    if (hitTestPoint(carRect.x, carRect.y, carRect.width, carRect.height, enemyFourRect.x, enemyFourRect.y) == true && carFourHit == false) {
+    if (carRect.x < enemyFourRect.x + enemyFourRect.width && carRect.x + carRect.width > enemyFourRect.x && carRect.y < enemyFourRect.y + enemyFourRect.height && carRect.height + carRect.y > enemyFourRect.y && carFourHit == false) {
+        //Car hit!
         hp -= 25;
         updateHealthOrScore();
         carFourHit = true;
     }
 
     //Car Five collision detection
-    if (hitTestPoint(carRect.x, carRect.y, carRect.width, carRect.height, enemyFiveRect.x, enemyFiveRect.y) == true && carFiveHit == false) {
+    if (carRect.x < enemyFiveRect.x + enemyFiveRect.width && carRect.x + carRect.width > enemyFiveRect.x && carRect.y < enemyFiveRect.y + enemyFiveRect.height && carRect.height + carRect.y > enemyFiveRect.y && carFiveHit == false) {
+        //Car hit!
         hp -= 25;
         updateHealthOrScore();
         carFiveHit = true;
     }
 
     //Car Six collision detection
-    if (hitTestPoint(carRect.x, carRect.y, carRect.width, carRect.height, enemySixRect.x, enemySixRect.y) == true && carSixHit == false) {
+    if (carRect.x < enemySixRect.x + enemySixRect.width && carRect.x + carRect.width > enemySixRect.x && carRect.y < enemySixRect.y + enemySixRect.height && carRect.height + carRect.y > enemySixRect.y && carSixHit == false) {
+        //Car hit!
         hp -= 25;
         updateHealthOrScore();
         carSixHit = true;
-    }
-
-    //Coin collision detection
-    if (hitTestPoint(carRect.x, carRect.y, carRect.width, carRect.height, coinRect.x, coinRect.y) == true && coinAlive == true) {
-        score += 25;
-        updateHealthOrScore();
-        coinAlive = false;
-        coin.y = -200;
     }
 
     console.log("------------CAR RECT INCOMING-----------");
@@ -345,6 +352,7 @@ function newEnemy(whichCar) {
     }
 
     if (whichCar == 2) {
+        carTwoHit = false;
         carTwoAlive = true;
         enemyCarTwo.y = 0;
         posEnemyTwo = Math.floor((Math.random() * 1260) + 1);
@@ -356,6 +364,7 @@ function newEnemy(whichCar) {
     }
 
     if (whichCar == 3) {
+        carThreeHit = false;
         carThreeAlive = true;
         enemyCarThree.y = 0;
         posEnemyThree = Math.floor((Math.random() * 1260) + 1);
@@ -372,6 +381,7 @@ function newEnemy(whichCar) {
     }
 
     if (whichCar == 4) {
+        carFourHit = false;
         carFourAlive = true;
         enemyCarFour.y = 0;
         posEnemyFour = Math.floor((Math.random() * 1260) + 1);
@@ -383,6 +393,7 @@ function newEnemy(whichCar) {
     }
 
     if (whichCar == 5) {
+        carFiveHit = false;
         carFiveAlive = true;
         enemyCarFive.y = 0;
         posEnemyFive = Math.floor((Math.random() * 1260) + 1);
@@ -394,6 +405,7 @@ function newEnemy(whichCar) {
     }
 
     if (whichCar == 6) {
+        carSixHit = false;
         carSixAlive = true;
         enemyCarSix.y = 0;
         posEnemySix = Math.floor((Math.random() * 1260) + 1);
@@ -409,37 +421,34 @@ function newEnemy(whichCar) {
 
 function manageEnemiesAndCoins() {
     //Create new enemies as others "die"
-    if (enemyCarOne.y >= 500) {
+    if (enemyCarOne.y >= 600) {
         newEnemy(2);
         enemyCarOne.y = -200;
         carOneAlive = false;
     }
 
-    if (enemyCarTwo.y >= 500) {
+    if (enemyCarTwo.y >= 600) {
         newEnemy(3);
         enemyCarTwo.y = -200;
         carTwoAlive = false;
     }
 
-    if (enemyCarThree.y >= 500) {
+    if (enemyCarThree.y >= 600) {
         newEnemy(4);
         enemyCarThree.y = -200;
         carThreeAlive = false;
     }
 
-    if (enemyCarFour.y >= 500) {
+    if (enemyCarFour.y >= 600) {
         newEnemy(5);
         enemyCarFour.y = -200;
         carFourAlive = false;
     }
 
-    if (enemyCarFive.y >= 500) {
+    if (enemyCarFive.y >= 600) {
         newEnemy(6);
         enemyCarFive.y = -200;
         carFiveAlive = false;
-
-        //TEST
-        manageColisions();
     }
 
     if (enemyCarSix.y >= 500) {
@@ -485,7 +494,7 @@ function manageEnemiesAndCoins() {
     }
 
     if (coinAlive == true) {
-        coin.y += 13;
+        coin.y += 15;
         coin.x = posCoin;
     }
 }
