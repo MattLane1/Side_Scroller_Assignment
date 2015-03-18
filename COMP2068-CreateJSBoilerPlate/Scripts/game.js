@@ -3,30 +3,38 @@ var stage;
 
 var car;
 var background;
+
 var enemyCarOne;
 var enemyCarTwo;
+var enemyCarThree;
+var enemyCarFour;
+var enemyCarFive;
+var enemyCarSix;
 
 var posEnemyOne;
 var posEnemyTwo;
 var posEnemyThree;
 var posEnemyFour;
 var posEnemyFive;
+var posEnemySix;
 
 var carOneAlive;
 var carTwoAlive;
 var carThreeAlive;
 var carFourAlive;
 var carFiveAlive;
+var carSixAlive;
 
-// Game Objects
-//var helloText: createjs.Text;
-//var button: createjs.Bitmap;
 function init() {
     canvas = document.getElementById("canvas");
     stage = new createjs.Stage(canvas);
 
-    carOneAlive = true;
+    carOneAlive = false;
     carTwoAlive = false;
+    carThreeAlive = false;
+    carFourAlive = false;
+    carFiveAlive = false;
+    carSixAlive = false;
 
     //Size canvas
     stage.canvas.width = (window.innerWidth - 25);
@@ -49,25 +57,18 @@ function init() {
     //Add the background to the stage
     stage.addChild(background);
 
+    //Add the enemy cars
+    loadEnemyCars();
+
     //Create player controlled car
     car = new createjs.Bitmap("assets/images/car.png");
     car.scaleX = .5;
     car.scaleY = .5;
     car.y = (480 - car.y);
 
-    //Create enemy one
-    enemyCarOne = new createjs.Bitmap("assets/images/enemycar.png");
-    enemyCarOne.scaleX = .5;
-    enemyCarOne.scaleY = .5;
-    enemyCarOne.y = 0;
-
-    //Create enemy two
-    enemyCarTwo = new createjs.Bitmap("assets/images/enemycar.png");
-    enemyCarTwo.scaleX = .5;
-    enemyCarTwo.scaleY = .5;
-    enemyCarTwo.y = 0;
-
     newEnemy(1);
+    newEnemy(3);
+    newEnemy(5);
 
     stage.addChild(car);
 
@@ -80,6 +81,45 @@ function getMousePos(canvas, evt) {
         x: evt.clientX,
         y: evt.clientY
     };
+}
+
+//Load, size, position the enemy cars
+function loadEnemyCars() {
+    //Create enemy one
+    enemyCarOne = new createjs.Bitmap("assets/images/enemyOne.png");
+    enemyCarOne.scaleX = .6;
+    enemyCarOne.scaleY = .6;
+    enemyCarOne.y = 0;
+
+    //Create enemy two
+    enemyCarTwo = new createjs.Bitmap("assets/images/enemyTwo.png");
+    enemyCarTwo.scaleX = .6;
+    enemyCarTwo.scaleY = .6;
+    enemyCarTwo.y = 0;
+
+    //Create enemy three
+    enemyCarThree = new createjs.Bitmap("assets/images/enemyThree.png");
+    enemyCarThree.scaleX = .6;
+    enemyCarThree.scaleY = .6;
+    enemyCarThree.y = 0;
+
+    //Create enemy four
+    enemyCarFour = new createjs.Bitmap("assets/images/enemyFour.png");
+    enemyCarFour.scaleX = .6;
+    enemyCarFour.scaleY = .6;
+    enemyCarFour.y = 0;
+
+    //Create enemy five
+    enemyCarFive = new createjs.Bitmap("assets/images/enemyFive.png");
+    enemyCarFive.scaleX = .6;
+    enemyCarFive.scaleY = .6;
+    enemyCarFive.y = 0;
+
+    //Create enemy Six
+    enemyCarSix = new createjs.Bitmap("assets/images/enemySix.png");
+    enemyCarSix.scaleX = .6;
+    enemyCarSix.scaleY = .6;
+    enemyCarSix.y = 0;
 }
 
 //Moves the players character
@@ -104,6 +144,10 @@ function newEnemy(whichCar) {
         carOneAlive = true;
         enemyCarOne.y = 0;
         posEnemyOne = Math.floor((Math.random() * 1260) + 1);
+
+        if (posEnemyOne == posEnemyTwo || posEnemyOne == posEnemyThree || posEnemyOne == posEnemyFour || posEnemyOne == posEnemyFive || posEnemyOne == posEnemySix)
+            newEnemy(1);
+
         stage.addChild(enemyCarOne);
     }
 
@@ -111,13 +155,62 @@ function newEnemy(whichCar) {
         carTwoAlive = true;
         enemyCarTwo.y = 0;
         posEnemyTwo = Math.floor((Math.random() * 1260) + 1);
+
+        if (posEnemyTwo == posEnemyOne || posEnemyTwo == posEnemyThree || posEnemyTwo == posEnemyFour || posEnemyTwo == posEnemyFive || posEnemyTwo == posEnemySix)
+            newEnemy(2);
+
         stage.addChild(enemyCarTwo);
+    }
+
+    if (whichCar == 3) {
+        carThreeAlive = true;
+        enemyCarThree.y = 0;
+        posEnemyThree = Math.floor((Math.random() * 1260) + 1);
+
+        if (posEnemyThree == posEnemyTwo || posEnemyThree == posEnemyOne || posEnemyThree == posEnemyFour || posEnemyThree == posEnemyFive || posEnemyThree == posEnemySix)
+            newEnemy(3);
+
+        stage.addChild(enemyCarThree);
+    }
+
+    if (whichCar == 4) {
+        carFourAlive = true;
+        enemyCarFour.y = 0;
+        posEnemyFour = Math.floor((Math.random() * 1260) + 1);
+
+        if (posEnemyFour == posEnemyOne || posEnemyFour == posEnemyThree || posEnemyFour == posEnemyTwo || posEnemyFour == posEnemyFive || posEnemyFour == posEnemySix)
+            newEnemy(4);
+
+        stage.addChild(enemyCarFour);
+    }
+
+    if (whichCar == 5) {
+        carFiveAlive = true;
+        enemyCarFive.y = 0;
+        posEnemyFive = Math.floor((Math.random() * 1260) + 1);
+
+        if (posEnemyFive == posEnemyTwo || posEnemyFive == posEnemyThree || posEnemyFive == posEnemyFour || posEnemyFive == posEnemyOne || posEnemyFive == posEnemySix)
+            newEnemy(5);
+
+        stage.addChild(enemyCarFive);
+    }
+
+    if (whichCar == 6) {
+        carSixAlive = true;
+        enemyCarSix.y = 0;
+        posEnemySix = Math.floor((Math.random() * 1260) + 1);
+
+        if (posEnemySix == posEnemyTwo || posEnemySix == posEnemyThree || posEnemySix == posEnemyFour || posEnemySix == posEnemyFive || posEnemySix == posEnemyOne)
+            newEnemy(6);
+
+        stage.addChild(enemyCarSix);
     }
 
     whichCar = 0;
 }
 
 function gameLoop() {
+    //Create new enemies as others "die"
     if (enemyCarOne.y >= 800) {
         newEnemy(2);
         enemyCarOne.y = -200;
@@ -125,19 +218,64 @@ function gameLoop() {
     }
 
     if (enemyCarTwo.y >= 800) {
-        newEnemy(1);
+        newEnemy(3);
         enemyCarTwo.y = -200;
         carTwoAlive = false;
     }
 
+    if (enemyCarThree.y >= 800) {
+        newEnemy(4);
+        enemyCarThree.y = -200;
+        carThreeAlive = false;
+    }
+
+    if (enemyCarFour.y >= 800) {
+        newEnemy(5);
+        enemyCarFour.y = -200;
+        carFourAlive = false;
+    }
+
+    if (enemyCarFive.y >= 800) {
+        newEnemy(6);
+        enemyCarFive.y = -200;
+        carFiveAlive = false;
+    }
+
+    if (enemyCarSix.y >= 800) {
+        newEnemy(1);
+        enemyCarSix.y = -200;
+        carSixAlive = false;
+    }
+
+    //Move the "living" enemies down the road
     if (carOneAlive == true) {
         enemyCarOne.y += 15;
         enemyCarOne.x = posEnemyOne;
     }
 
     if (carTwoAlive == true) {
-        enemyCarTwo.y += 15;
+        enemyCarTwo.y += 10;
         enemyCarTwo.x = posEnemyTwo;
+    }
+
+    if (carThreeAlive == true) {
+        enemyCarThree.y += 12;
+        enemyCarThree.x = posEnemyThree;
+    }
+
+    if (carFourAlive == true) {
+        enemyCarFour.y += 17;
+        enemyCarFour.x = posEnemyFour;
+    }
+
+    if (carFiveAlive == true) {
+        enemyCarFive.y += 9;
+        enemyCarFive.x = posEnemyFive;
+    }
+
+    if (carSixAlive == true) {
+        enemyCarSix.y += 13;
+        enemyCarSix.x = posEnemySix;
     }
 
     console.log("enemyCarTwo.x = " + posEnemyTwo);
