@@ -34,6 +34,8 @@ var posEnemyFour;
 var posEnemyFive;
 var posEnemySix;
 
+var gameOver;
+
 var posCoin;
 
 var carOneAlive;
@@ -51,6 +53,8 @@ var hp;
 var postScore;
 var score;
 
+var postWinLoose;
+
 var carOneHit;
 var carTwoHit;
 var carThreeHit;
@@ -67,7 +71,7 @@ function main() {
     canvas = document.getElementById("canvas");
     stage = new createjs.Stage(canvas);
 
-    hp = 100;
+    hp = 200;
     score = 0;
 
     carOneAlive = false;
@@ -85,6 +89,8 @@ function main() {
     carSixHit = false;
 
     coinAlive = false;
+
+    gameOver = false;
 
     //Size canvas
     stage.canvas.width = (window.innerWidth - 25);
@@ -125,14 +131,38 @@ function main() {
 
 //The Game Loop
 function gameLoop() {
-    //Move cars and money toward the player
-    manageEnemiesAndCoins();
+    if (score >= 200) {
+        //Display health
+        postWinLoose = new createjs.Text("CONGRADULATIONS, YOU WIN!!", "80px Consolas", "#FFFFFF");
+        postWinLoose.x = 140;
 
-    //Check if anything has been hit
-    manageColisions();
+        gameOver = true;
 
-    //Set up and display the current stage
-    setStage();
+        stage.addChild(postWinLoose);
+        stage.update();
+    }
+
+    if (hp <= 0) {
+        //Display health
+        postWinLoose = new createjs.Text("TRY AGAIN, YOU LOOSE!!", "80px Consolas", "#FFFFFF");
+        postWinLoose.x = 140;
+
+        gameOver = true;
+
+        stage.addChild(postWinLoose);
+        stage.update();
+    }
+
+    if (gameOver == false) {
+        //Move cars and money toward the player
+        manageEnemiesAndCoins();
+
+        //Check if anything has been hit
+        manageColisions();
+
+        //Set up and display the current stage
+        setStage();
+    }
 }
 
 function setStage() {
@@ -464,32 +494,32 @@ function manageEnemiesAndCoins() {
 
     //Move the "living" enemies down the road
     if (carOneAlive == true) {
-        enemyCarOne.y += 4;
+        enemyCarOne.y += 9;
         enemyCarOne.x = posEnemyOne;
     }
 
     if (carTwoAlive == true) {
-        enemyCarTwo.y += 4;
+        enemyCarTwo.y += 12;
         enemyCarTwo.x = posEnemyTwo;
     }
 
     if (carThreeAlive == true) {
-        enemyCarThree.y += 4;
+        enemyCarThree.y += 14;
         enemyCarThree.x = posEnemyThree;
     }
 
     if (carFourAlive == true) {
-        enemyCarFour.y += 4;
+        enemyCarFour.y += 11;
         enemyCarFour.x = posEnemyFour;
     }
 
     if (carFiveAlive == true) {
-        enemyCarFive.y += 4;
+        enemyCarFive.y += 17;
         enemyCarFive.x = posEnemyFive;
     }
 
     if (carSixAlive == true) {
-        enemyCarSix.y += 4;
+        enemyCarSix.y += 10;
         enemyCarSix.x = posEnemySix;
     }
 
