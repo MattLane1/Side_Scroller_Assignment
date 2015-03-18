@@ -41,7 +41,19 @@ var hp;
 var postScore;
 var score;
 
+var carOneHit;
+var carTwoHit;
+var carThreeHit;
+var carFourHit;
+var carFiveHit;
+var carSixHit;
+
 function init() {
+    main();
+}
+
+// Our Game Kicks off in here
+function main() {
     canvas = document.getElementById("canvas");
     stage = new createjs.Stage(canvas);
 
@@ -54,6 +66,13 @@ function init() {
     carFourAlive = false;
     carFiveAlive = false;
     carSixAlive = false;
+
+    carOneHit = false;
+    carTwoHit = false;
+    carThreeHit = false;
+    carFourHit = false;
+    carFiveHit = false;
+    carSixHit = false;
 
     coinAlive = false;
 
@@ -91,11 +110,7 @@ function init() {
     newEnemy(3);
     newEnemy(5);
 
-    stage.addChild(car);
-
     updateHealthOrScore();
-
-    main();
 }
 
 //The Game Loop
@@ -106,10 +121,46 @@ function gameLoop() {
     //Check if anything has been hit
     manageColisions();
 
+    //Set up and display the current stage
+    setStage();
+}
+
+function setStage() {
+    //Clear the stage first
+    stage.clear();
+
+    //Add the background
+    stage.addChild(background);
+
+    //Add the player
+    stage.addChild(car);
+
+    //Add living enemies
+    if (carOneAlive == true)
+        stage.addChild(enemyCarOne);
+
+    if (carTwoAlive == true)
+        stage.addChild(enemyCarTwo);
+
+    if (carThreeAlive == true)
+        stage.addChild(enemyCarThree);
+
+    if (carFourAlive == true)
+        stage.addChild(enemyCarFour);
+
+    if (carFiveAlive == true)
+        stage.addChild(enemyCarFive);
+
+    if (carSixAlive == true)
+        stage.addChild(enemyCarSix);
+
+    //If there is a coin, add it too.
+    if (coinAlive == true)
+        stage.addChild(coin);
+
     //Add the score and hp to the stage
     stage.addChild(postHP);
     stage.addChild(postScore);
-
     stage.update(); // Refreshes our stage
 }
 
@@ -117,9 +168,10 @@ function manageColisions() {
     carRect = car.getTransformedBounds();
     enemyOneRect = enemyCarOne.getTransformedBounds();
 
-    if (hitTestPoint(carRect.x, carRect.y, carRect.width, carRect.height, enemyOneRect.x, enemyOneRect.y) == true) {
+    if (hitTestPoint(carRect.x, carRect.y, carRect.width, carRect.height, enemyOneRect.x, enemyOneRect.y) == true && carOneHit == false) {
         hp -= 25;
         updateHealthOrScore();
+        carOneHit = true;
     }
 
     console.log("------------CAR RECT INCOMING-----------");
@@ -216,6 +268,7 @@ function newEnemy(whichCar) {
     stage.clear();
 
     if (whichCar == 1) {
+        carOneHit = false;
         carOneAlive = true;
         enemyCarOne.y = 0;
         posEnemyOne = Math.floor((Math.random() * 1260) + 1);
@@ -370,30 +423,5 @@ function manageEnemiesAndCoins() {
         coin.y += 13;
         coin.x = posCoin;
     }
-}
-
-// Our Game Kicks off in here
-function main() {
-    // Bitmap Button
-    /*  button = new createjs.Bitmap("assets/images/blueButton.png");
-    stage.addChild(button);
-    button.x = stage.canvas.width * 0.5;
-    button.y = stage.canvas.height * 0.5;
-    button.regX = 110;
-    button.regY = 110;
-    
-    //    button.addEventListener("click", buttonClicked);
-    //   button.addEventListener("mouseover", buttonOver);
-    //   button.addEventListener("mouseout", buttonOut);
-    
-    
-    // Label
-    helloText = new createjs.Text("Hello World!", "40px Consolas", "#000000");
-    stage.addChild(helloText);
-    helloText.x = stage.canvas.width * 0.5;
-    helloText.y = stage.canvas.height * 0.5;
-    helloText.regX = helloText.getBounds().width * 0.5;
-    helloText.regY = helloText.getBounds().height * 0.5;
-    */
 }
 //# sourceMappingURL=game.js.map
