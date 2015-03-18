@@ -11,12 +11,20 @@ var enemyCarFour: createjs.Bitmap;
 var enemyCarFive: createjs.Bitmap;
 var enemyCarSix: createjs.Bitmap;
 
+var coin: createjs.Bitmap;
+
+var carRect = new createjs.Rectangle();
+
+var enemyOneRect = new createjs.Rectangle();
+
 var posEnemyOne;
 var posEnemyTwo;
 var posEnemyThree;
 var posEnemyFour;
 var posEnemyFive;
 var posEnemySix;
+
+var posCoin;
 
 var carOneAlive;
 var carTwoAlive;
@@ -25,9 +33,21 @@ var carFourAlive;
 var carFiveAlive;
 var carSixAlive;
 
+var coinAlive;
+
+var postHP;
+var hp;
+
+var postScore;
+var score;
+
+
 function init() {
     canvas = document.getElementById("canvas");
     stage = new createjs.Stage(canvas);
+
+    hp = 100;
+    score = 0;
 
     carOneAlive = false;
     carTwoAlive = false;
@@ -35,6 +55,8 @@ function init() {
     carFourAlive = false;
     carFiveAlive = false;
     carSixAlive = false;
+
+    coinAlive = false;
 
     //Size canvas
     stage.canvas.width = (window.innerWidth - 25);
@@ -69,12 +91,61 @@ function init() {
     newEnemy(1);
     newEnemy(3);
     newEnemy(5);
-    
 
     stage.addChild(car);
 
+    updateHealthOrScore();
+
     main();
 }
+
+//The Game Loop
+function gameLoop() {
+
+    //Move cars and money toward the player
+    manageEnemiesAndCoins();
+
+    //Check if anything has been hit
+    manageColisions();
+
+    //Add the score and hp to the stage
+    stage.addChild(postHP);
+    stage.addChild(postScore);
+
+    stage.update(); // Refreshes our stage
+}
+
+function manageColisions() {
+     carRect = car.getTransformedBounds();
+     enemyOneRect = enemyCarOne.getTransformedBounds();
+
+
+    if (hitTestPoint(carRect.x, carRect.y, carRect.width, carRect.height, enemyOneRect.x, enemyOneRect.y) == true) {
+        hp -= 25;
+        updateHealthOrScore();
+    }
+
+
+    console.log("------------CAR RECT INCOMING-----------");
+    console.log("carRect.x = " + carRect.x);
+    console.log("carRect width = " + carRect.width);
+    console.log("hp = " + hp);
+}
+
+    function hitTestPoint(x1, y1, w1, h1, x2, y2) {
+        //x1, y1 = x and y coordinates of object 1
+        //w1, h1 = width and height of object 1
+        //x2, y2 = x and y coordinates of object 2 (usually midpt)
+        if ((x1 <= x2 && x1 + w1 >= x2) &&
+            (y1 <= y2 && y1 + h1 >= y2))
+            return true;
+        else
+            return false;
+    }
+
+
+
+
 
 //Get the position of the mouse
 function getMousePos(canvas, evt) {
@@ -121,27 +192,41 @@ function loadEnemyCars() {
     enemyCarSix.scaleX = .6;
     enemyCarSix.scaleY = .6;
     enemyCarSix.y = 0;
+
+    //Create coin
+    coin = new createjs.Bitmap("assets/images/coin.jpg");
+    coin.scaleX = .5;
+    coin.scaleY = .5;
+    coin.y = 0;
+    
 }
 
 //Moves the players character
 function movePlayer(mousePos) {
     var rect = stage.getBounds();
 
-    console.log("mousePos.x = " + mousePos.x);
-
-    console.log("rect = " + rect.x);
-    console.log("canvas = " + canvas.x);
-
-    
     //DO BOUNDING
     car.x = (mousePos.x - 40); 
-
-    //test.y = (mousePos.y); 
-    //test.x = (mousePos.x - 40); 
     car.y = (480 - car.image.height()); 
 }
 
+function updateHealthOrScore() {
+
+    //Display health
+    postHP = new createjs.Text("HP:" + hp, "20px Consolas", "#FFFFFF");
+    postHP.x = 0;
+    postHP.y = 0;
+
+    //Post score
+    postScore = new createjs.Text("Score:" + score, "20px Consolas", "#FFFFFF");
+    postScore.x = 90;
+    postScore.y = 0;
+}
+
 function newEnemy(whichCar) {
+
+    stage.clear();
+
     if (whichCar == 1) {
         carOneAlive = true;
         enemyCarOne.y = 0;
@@ -172,6 +257,11 @@ function newEnemy(whichCar) {
         if (posEnemyThree == posEnemyTwo || posEnemyThree == posEnemyOne || posEnemyThree == posEnemyFour || posEnemyThree == posEnemyFive || posEnemyThree == posEnemySix)
             newEnemy(3);
 
+        coin.y = 0;
+        posCoin = Math.floor((Math.random() * 1260) + 1);
+        coinAlive = true;
+        
+        stage.addChild(coin);
         stage.addChild(enemyCarThree);
     }
 
@@ -211,46 +301,52 @@ function newEnemy(whichCar) {
     whichCar = 0;
 }
 
-
-function gameLoop() {
+function manageEnemiesAndCoins() {
 
     //Create new enemies as others "die"
-    if (enemyCarOne.y >= 800) {
+    if (enemyCarOne.y >= 500) {
         newEnemy(2);
         enemyCarOne.y = -200;
         carOneAlive = false;
     }
 
-    if (enemyCarTwo.y >= 800) {
+    if (enemyCarTwo.y >= 500) {
         newEnemy(3);
         enemyCarTwo.y = -200;
         carTwoAlive = false;
     }
 
-    if (enemyCarThree.y >= 800) {
+    if (enemyCarThree.y >= 500) {
         newEnemy(4);
         enemyCarThree.y = -200;
         carThreeAlive = false;
     }
 
-    if (enemyCarFour.y >= 800) {
+    if (enemyCarFour.y >= 500) {
         newEnemy(5);
         enemyCarFour.y = -200;
         carFourAlive = false;
     }
 
-    if (enemyCarFive.y >= 800) {
+    if (enemyCarFive.y >= 500) {
         newEnemy(6);
         enemyCarFive.y = -200;
         carFiveAlive = false;
+
+        //TEST
+        manageColisions();
     }
 
-    if (enemyCarSix.y >= 800) {
+    if (enemyCarSix.y >= 500) {
         newEnemy(1);
         enemyCarSix.y = -200;
         carSixAlive = false;
     }
 
+    if (coin.y >= 500) {
+        coin.y = -200;
+        coinAlive = false;
+    }
 
 
     //Move the "living" enemies down the road
@@ -269,7 +365,7 @@ function gameLoop() {
         enemyCarThree.x = posEnemyThree;
     }
 
-     if (carFourAlive == true) {
+    if (carFourAlive == true) {
         enemyCarFour.y += 17;
         enemyCarFour.x = posEnemyFour;
     }
@@ -284,14 +380,11 @@ function gameLoop() {
         enemyCarSix.x = posEnemySix;
     }
 
-    console.log("enemyCarTwo.x = " + posEnemyTwo);
-    console.log("enemyCarOne.x = " + posEnemyOne);
-   
-    stage.update(); // Refreshes our stage
+    if (coinAlive == true) {
+        coin.y += 13;
+        coin.x = posCoin;
+    }
 }
-
-
-
 
 
 // Our Game Kicks off in here
