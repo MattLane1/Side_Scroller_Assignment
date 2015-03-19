@@ -3,6 +3,8 @@ var stage;
 
 var car;
 var background;
+var splashScreen;
+var beginButton;
 
 var enemyCarOne;
 var enemyCarTwo;
@@ -53,6 +55,9 @@ var hp;
 var postScore;
 var score;
 
+var postWelcome;
+var postInstructions;
+
 var postWinLoose;
 
 var carOneHit;
@@ -61,6 +66,8 @@ var carThreeHit;
 var carFourHit;
 var carFiveHit;
 var carSixHit;
+
+var coinSound;
 
 function init() {
     main();
@@ -100,9 +107,7 @@ function main() {
     createjs.Ticker.setFPS(60); // 60 frames per second
     createjs.Ticker.addEventListener("tick", gameLoop);
 
-    //Add in the background
-    background = new createjs.Bitmap("assets/images/road.jpg");
-    background.scaleX = background.scaleY = 3.3;
+    coinSound = new Audio('coin.aiff');
 
     //Add listener for mouse movement
     canvas.addEventListener('mousemove', function (evt) {
@@ -110,18 +115,44 @@ function main() {
         movePlayer(mousePos);
     }, false);
 
-    //Add the background to the stage
-    stage.addChild(background);
-
-    //Add the enemy cars
-    loadEnemyCars();
-
     //Create player controlled car
     car = new createjs.Bitmap("assets/images/car.png");
     car.scaleX = .5;
     car.scaleY = .5;
     car.y = (480 - car.y);
 
+    car.visible = false;
+
+    //Add the enemy cars
+    loadEnemyCars();
+
+    splashScreen = new createjs.Bitmap("assets/images/Splash.png");
+    splashScreen.x = 0;
+    splashScreen.y = 0;
+    splashScreen.scaleX = 2.1;
+    splashScreen.scaleY = 1.5;
+
+    beginButton = new createjs.Bitmap("assets/images/beginButton.png");
+    beginButton.x = 300;
+    beginButton.y = 300;
+
+    splashScreen.addEventListener("click", beginGame, false);
+
+    stage.addChild(splashScreen);
+
+    //beginGame();
+    stage.update();
+}
+
+function beginGame() {
+    //Add in the background
+    background = new createjs.Bitmap("assets/images/road.jpg");
+    background.scaleX = background.scaleY = 3.3;
+
+    stage.removeChild(splashScreen);
+    stage.addChild(background);
+
+    car.visible = true;
     newEnemy(1);
     newEnemy(3);
     newEnemy(5);
@@ -229,6 +260,8 @@ function manageColisions() {
         updateHealthOrScore();
         coinAlive = false;
         coin.y = -200;
+
+        coinSound.play();
     }
 
     //Car one collision detection
@@ -278,11 +311,6 @@ function manageColisions() {
         updateHealthOrScore();
         carSixHit = true;
     }
-
-    console.log("------------CAR RECT INCOMING-----------");
-    console.log("carRect.x = " + carRect.x);
-    console.log("carRect width = " + carRect.width);
-    console.log("hp = " + hp);
 }
 
 function hitTestPoint(x1, y1, w1, h1, x2, y2) {

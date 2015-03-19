@@ -67,6 +67,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\audio\coin.aiff" />
+    <Content Include="assets\images\beginButton.png" />
     <Content Include="assets\images\blueButton.png" />
     <Content Include="assets\images\car.png" />
     <Content Include="assets\images\coin.png" />
@@ -77,6 +79,7 @@
     <Content Include="assets\images\enemyThree.png" />
     <Content Include="assets\images\enemyTwo.png" />
     <Content Include="assets\images\road.jpg" />
+    <Content Include="assets\images\Splash.png" />
     <Content Include="css\game.css" />
     <Content Include="index.html" />
     <Content Include="Scripts\lib\easeljs-0.8.0.min.js" />
@@ -98,7 +101,6 @@
     <TypeScriptCompile Include="Scripts\lib\tweenjs.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="assets\audio\" />
     <Folder Include="assets\fonts\" />
   </ItemGroup>
   <PropertyGroup>
