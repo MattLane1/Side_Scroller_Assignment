@@ -1,11 +1,14 @@
-﻿var canvas;
+﻿
+//Create stage and canvas
+var canvas;
 var stage: createjs.Stage;
 
+//Set up bitmaps
 var car: createjs.Bitmap;
 var background: createjs.Bitmap;
 var splashScreen: createjs.Bitmap;
-var beginButton: createjs.Bitmap;
 
+//Set up enemy images
 var enemyCarOne: createjs.Bitmap;
 var enemyCarTwo: createjs.Bitmap;
 var enemyCarThree: createjs.Bitmap;
@@ -13,6 +16,7 @@ var enemyCarFour: createjs.Bitmap;
 var enemyCarFive: createjs.Bitmap;
 var enemyCarSix: createjs.Bitmap;
 
+//Coin imagew
 var coin: createjs.Bitmap;
 
 //Coin rect
@@ -29,37 +33,26 @@ var enemyFourRect = new createjs.Rectangle();
 var enemyFiveRect = new createjs.Rectangle();
 var enemySixRect = new createjs.Rectangle();
 
+//The current position of each enemy and the coin
 var posEnemyOne;
 var posEnemyTwo;
 var posEnemyThree;
 var posEnemyFour;
 var posEnemyFive;
 var posEnemySix;
-
-var gameOver;
-
 var posCoin;
 
+//Flag section (is each enemy or coin, alive on screen? Is the game over?)
+var gameOver;
 var carOneAlive;
 var carTwoAlive;
 var carThreeAlive;
 var carFourAlive;
 var carFiveAlive;
 var carSixAlive;
-
 var coinAlive;
 
-var postHP;
-var hp;
-
-var postScore;
-var score;
-
-var postWelcome;
-var postInstructions;
-
-var postWinLoose;
-
+//Detection of collisions lasts as long as the images colide. We only need to register a hit once, so we set the flag as soon as damage is done. 
 var carOneHit;
 var carTwoHit;
 var carThreeHit;
@@ -67,14 +60,27 @@ var carFourHit;
 var carFiveHit;
 var carSixHit;
 
+//post variables are used to write words to the screen for the user
+var postHP;
+var postReset;
+var postScore;
+var postWelcome;
+var postInstructions;
+var postWinLoose;
+
+//Current score and hp values
+var score;
+var hp;
+
+//Sounds
 var coinSound;
 
-
+//Init
 function init() {
     main();
 }
 
-// Our Game Kicks off in here
+//Main
 function main() {
     canvas = document.getElementById("canvas");
     stage = new createjs.Stage(canvas);
@@ -134,10 +140,6 @@ function main() {
     splashScreen.scaleX = 2.1;
     splashScreen.scaleY = 1.5;
 
-    beginButton = new createjs.Bitmap("assets/images/beginButton.png");
-    beginButton.x = 300;
-    beginButton.y = 300;
-
 
     splashScreen.addEventListener("click", beginGame, false);
 
@@ -148,10 +150,43 @@ function main() {
     stage.update();
 }
 
+function resetGame() {
+    hp = 200;
+    score = 0;
+
+    carOneAlive = false;
+    carTwoAlive = false;
+    carThreeAlive = false;
+    carFourAlive = false;
+    carFiveAlive = false;
+    carSixAlive = false;
+
+    carOneHit = false;
+    carTwoHit = false;
+    carThreeHit = false;
+    carFourHit = false;
+    carFiveHit = false;
+    carSixHit = false;
+
+    coinAlive = false;
+
+    gameOver = false;
+
+    //Remove the listener if it exists (if this is a reset)
+    background.addEventListener("click", null);
+
+    stage.removeAllChildren();
+
+    beginGame();
+}
+
 function beginGame() {
     //Add in the background
     background = new createjs.Bitmap("assets/images/road.jpg");
     background.scaleX = background.scaleY = 3.3;
+
+    //Remove the listener if it exists (if this is a reset)
+    background.removeEventListener("click", beginGame, false);
 
     stage.removeChild(splashScreen);
     stage.addChild(background);
@@ -172,11 +207,18 @@ function gameLoop() {
 
     if (score >= 200) {
         //Display health
-        postWinLoose = new createjs.Text("CONGRADULATIONS, YOU WIN!! \n Click anywhere to play again!", "80px Consolas", "#FFFFFF");
+        postWinLoose = new createjs.Text("CONGRADULATIONS, YOU WIN!!", "80px Consolas", "#FFFFFF");
         postWinLoose.x = 140;
+
+        postReset = new createjs.Text("Click anywhere on the screen to play again!", "30px Consolas", "#FFFFFF");
+        postReset.x = 180;
+        postReset.y = 200;
 
         gameOver = true;
 
+        background.addEventListener("click", resetGame, false);
+
+        stage.addChild(postReset);
         stage.addChild(postWinLoose);
         stage.update();
     }
@@ -186,8 +228,15 @@ function gameLoop() {
         postWinLoose = new createjs.Text("TRY AGAIN, YOU LOOSE!!", "80px Consolas", "#FFFFFF");
         postWinLoose.x = 140;
 
+        postReset = new createjs.Text("Click anywhere on the screen to play again!", "30px Consolas", "#FFFFFF");
+        postReset.x = 140;
+        postReset.y = 200;
+
         gameOver = true;
 
+        background.addEventListener("click", resetGame, false);
+
+        stage.addChild(postReset);
         stage.addChild(postWinLoose);
         stage.update();
     }
