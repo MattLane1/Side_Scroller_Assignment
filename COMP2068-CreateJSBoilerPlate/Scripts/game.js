@@ -1,4 +1,6 @@
-﻿//Create stage and canvas
+﻿//Assignment Three Comp 2068 Advanced Web Programming
+//Matthew Lane (200214586)
+//Create stage and canvas
 var canvas;
 var stage;
 
@@ -81,39 +83,14 @@ function init() {
 
 //Main
 function main() {
+    //Set up canvas and stage
     canvas = document.getElementById("canvas");
     stage = new createjs.Stage(canvas);
 
-    hp = 200;
-    score = 0;
-
-    carOneAlive = false;
-    carTwoAlive = false;
-    carThreeAlive = false;
-    carFourAlive = false;
-    carFiveAlive = false;
-    carSixAlive = false;
-
-    carOneHit = false;
-    carTwoHit = false;
-    carThreeHit = false;
-    carFourHit = false;
-    carFiveHit = false;
-    carSixHit = false;
-
-    coinAlive = false;
-
-    gameOver = false;
-
-    //Size canvas
+    //Set up stage
     stage.canvas.width = (window.innerWidth - 25);
     stage.canvas.height = (window.innerHeight - 25);
-
     stage.enableMouseOver(20); // Enable mouse events
-    createjs.Ticker.setFPS(60); // 60 frames per second
-    createjs.Ticker.addEventListener("tick", gameLoop);
-
-    coinSound = new Audio('coin.aiff');
 
     //Add listener for mouse movement
     canvas.addEventListener('mousemove', function (evt) {
@@ -121,58 +98,91 @@ function main() {
         movePlayer(mousePos);
     }, false);
 
-    //Create player controlled car
-    car = new createjs.Bitmap("assets/images/car.png");
-    car.scaleX = .5;
-    car.scaleY = .5;
-    car.y = (480 - car.y);
-
-    car.visible = false;
-
-    //Add the enemy cars
-    loadEnemyCars();
-
-    splashScreen = new createjs.Bitmap("assets/images/Splash.png");
-    splashScreen.x = 0;
-    splashScreen.y = 0;
-    splashScreen.scaleX = 2.1;
-    splashScreen.scaleY = 1.5;
-
-    splashScreen.addEventListener("click", beginGame, false);
-
-    stage.addChild(splashScreen);
-
-    //beginGame();
-    stage.update();
-}
-
-function resetGame() {
+    //Inital health and score
     hp = 200;
     score = 0;
 
+    //Flag defaults
     carOneAlive = false;
     carTwoAlive = false;
     carThreeAlive = false;
     carFourAlive = false;
     carFiveAlive = false;
     carSixAlive = false;
-
     carOneHit = false;
     carTwoHit = false;
     carThreeHit = false;
     carFourHit = false;
     carFiveHit = false;
     carSixHit = false;
-
     coinAlive = false;
-
     gameOver = false;
 
-    //Remove the listener if it exists (if this is a reset)
+    //Define ticker
+    createjs.Ticker.setFPS(60); // 60 frames per second
+    createjs.Ticker.addEventListener("tick", gameLoop);
+
+    //Add sound
+    coinSound = new Audio('coin.aiff');
+
+    //Create player controlled car
+    car = new createjs.Bitmap("assets/images/car.png");
+    car.scaleX = .5;
+    car.scaleY = .5;
+    car.y = (480 - car.y);
+
+    //Hide the car on the splash screen
+    car.visible = false;
+
+    //Prepare the enemy cars
+    loadEnemyCars();
+
+    //Set up the splash screen
+    splashScreen = new createjs.Bitmap("assets/images/Splash.png");
+    splashScreen.x = 0;
+    splashScreen.y = 0;
+    splashScreen.scaleX = 2.1;
+    splashScreen.scaleY = 1.5;
+
+    //Add a listener to the splash screen
+    splashScreen.addEventListener("click", beginGame, false);
+
+    //Display the splash
+    stage.addChild(splashScreen);
+
+    //Update the stage
+    stage.update();
+}
+
+//This function resets the game so the user can play again. This is only called when the user restarts the game.
+function resetGame() {
+    //Reset all inital values
+    hp = 200;
+    score = 0;
+
+    //Default the flags
+    carOneAlive = false;
+    carTwoAlive = false;
+    carThreeAlive = false;
+    carFourAlive = false;
+    carFiveAlive = false;
+    carSixAlive = false;
+    carOneHit = false;
+    carTwoHit = false;
+    carThreeHit = false;
+    carFourHit = false;
+    carFiveHit = false;
+    carSixHit = false;
+    coinAlive = false;
+    gameOver = false;
+
+    //Remove the listener we added when the game ended (for restarting)
     background.addEventListener("click", null);
 
+    //Clear the stage so we start off fresh each time
     stage.removeAllChildren();
 
+    //Begin!
     beginGame();
 }
 
@@ -181,61 +191,74 @@ function beginGame() {
     background = new createjs.Bitmap("assets/images/road.jpg");
     background.scaleX = background.scaleY = 3.3;
 
-    //Remove the listener if it exists (if this is a reset)
-    background.removeEventListener("click", beginGame, false);
-
+    //Clear the splash screen
     stage.removeChild(splashScreen);
     stage.addChild(background);
 
+    //The players car can now be seen and used.
     car.visible = true;
+
+    //Spawn us some enemies!
     newEnemy(1);
     newEnemy(3);
     newEnemy(5);
 
+    //Post current health and score
     updateHealthOrScore();
 }
 
 //The Game Loop
 function gameLoop() {
-    //Hide the cursor
+    //Hide the cursor (we don't need it)
     stage.canvas.style.cursor = "none";
 
+    //We win!
     if (score >= 200) {
-        //Display health
+        //Post win message
         postWinLoose = new createjs.Text("CONGRADULATIONS, YOU WIN!!", "80px Consolas", "#FFFFFF");
         postWinLoose.x = 140;
 
+        //Inform how to reset the game
         postReset = new createjs.Text("Click anywhere on the screen to play again!", "30px Consolas", "#FFFFFF");
         postReset.x = 180;
         postReset.y = 200;
 
+        //The game is over!
         gameOver = true;
 
+        //Wait for reset
         background.addEventListener("click", resetGame, false);
 
+        //Display!
         stage.addChild(postReset);
         stage.addChild(postWinLoose);
         stage.update();
     }
 
+    //We loose!
     if (hp <= 0) {
-        //Display health
+        //Post win message
         postWinLoose = new createjs.Text("TRY AGAIN, YOU LOOSE!!", "80px Consolas", "#FFFFFF");
         postWinLoose.x = 140;
 
+        //Inform how to reset the game
         postReset = new createjs.Text("Click anywhere on the screen to play again!", "30px Consolas", "#FFFFFF");
         postReset.x = 140;
         postReset.y = 200;
 
+        //The game is over!
         gameOver = true;
 
+        //Wait for reset
         background.addEventListener("click", resetGame, false);
 
+        //Display!
         stage.addChild(postReset);
         stage.addChild(postWinLoose);
         stage.update();
     }
 
+    //The game is on!
     if (gameOver == false) {
         //Move cars and money toward the player
         manageEnemiesAndCoins();
@@ -304,75 +327,90 @@ function manageColisions() {
 
     //Picked up a coin?
     if (carRect.x < coinRect.x + coinRect.width && carRect.x + carRect.width > coinRect.x && carRect.y < coinRect.y + coinRect.height && carRect.height + carRect.y > coinRect.y && coinAlive == true) {
-        //Coin picked up!
+        //Coin picked up, thats 25 points
         score += 25;
+
+        //Update their score
         updateHealthOrScore();
+
+        //Coin is no longer in play
         coinAlive = false;
         coin.y = -200;
 
+        //Play the sound clip
         coinSound.play();
     }
 
     //Car one collision detection
     if (carRect.x < enemyOneRect.x + enemyOneRect.width && carRect.x + carRect.width > enemyOneRect.x && carRect.y < enemyOneRect.y + enemyOneRect.height && carRect.height + carRect.y > enemyOneRect.y && carOneHit == false) {
-        //Car hit!
+        //Car hit, they loose 25 hp
         hp -= 25;
         updateHealthOrScore();
+
+        //This flag stops the enemy doing damage until they leave the area, they should only do damage once.
         carOneHit = true;
     }
 
     //Car Two collision detection
     if (carRect.x < enemyTwoRect.x + enemyTwoRect.width && carRect.x + carRect.width > enemyTwoRect.x && carRect.y < enemyTwoRect.y + enemyTwoRect.height && carRect.height + carRect.y > enemyTwoRect.y && carTwoHit == false) {
-        //Car hit!
+        //Car hit, they loose 25 hp
         hp -= 25;
         updateHealthOrScore();
+
+        //This flag stops the enemy doing damage until they leave the area, they should only do damage once.
         carTwoHit = true;
     }
 
     //Car Three collision detection
     if (carRect.x < enemyThreeRect.x + enemyThreeRect.width && carRect.x + carRect.width > enemyThreeRect.x && carRect.y < enemyThreeRect.y + enemyThreeRect.height && carRect.height + carRect.y > enemyThreeRect.y && carThreeHit == false) {
-        //Car hit!
+        //Car hit, they loose 25 hp
         hp -= 25;
         updateHealthOrScore();
+
+        //This flag stops the enemy doing damage until they leave the area, they should only do damage once.
         carThreeHit = true;
     }
 
     //Car Four collision detection
     if (carRect.x < enemyFourRect.x + enemyFourRect.width && carRect.x + carRect.width > enemyFourRect.x && carRect.y < enemyFourRect.y + enemyFourRect.height && carRect.height + carRect.y > enemyFourRect.y && carFourHit == false) {
-        //Car hit!
+        //Car hit, they loose 25 hp
         hp -= 25;
         updateHealthOrScore();
+
+        //This flag stops the enemy doing damage until they leave the area, they should only do damage once.
         carFourHit = true;
     }
 
     //Car Five collision detection
     if (carRect.x < enemyFiveRect.x + enemyFiveRect.width && carRect.x + carRect.width > enemyFiveRect.x && carRect.y < enemyFiveRect.y + enemyFiveRect.height && carRect.height + carRect.y > enemyFiveRect.y && carFiveHit == false) {
-        //Car hit!
+        //Car hit, they loose 25 hp
         hp -= 25;
         updateHealthOrScore();
+
+        //This flag stops the enemy doing damage until they leave the area, they should only do damage once.
         carFiveHit = true;
     }
 
     //Car Six collision detection
     if (carRect.x < enemySixRect.x + enemySixRect.width && carRect.x + carRect.width > enemySixRect.x && carRect.y < enemySixRect.y + enemySixRect.height && carRect.height + carRect.y > enemySixRect.y && carSixHit == false) {
-        //Car hit!
+        //Car hit, they loose 25 hp
         hp -= 25;
         updateHealthOrScore();
+
+        //This flag stops the enemy doing damage until they leave the area, they should only do damage once.
         carSixHit = true;
     }
 }
 
+//This function tests if there is a collision, and returns true or false.
 function hitTestPoint(x1, y1, w1, h1, x2, y2) {
-    //x1, y1 = x and y coordinates of object 1
-    //w1, h1 = width and height of object 1
-    //x2, y2 = x and y coordinates of object 2 (usually midpt)
     if ((x1 <= x2 && x1 + w1 >= x2) && (y1 <= y2 && y1 + h1 >= y2))
         return true;
     else
         return false;
 }
 
-//Get the position of the mouse
+//Get and return the position of the mouse
 function getMousePos(canvas, evt) {
     return {
         x: evt.clientX,
@@ -380,7 +418,7 @@ function getMousePos(canvas, evt) {
     };
 }
 
-//Load, size, position the enemy cars
+//Load, size and position the enemy cars
 function loadEnemyCars() {
     //Create enemy one
     enemyCarOne = new createjs.Bitmap("assets/images/enemyOne.png");
@@ -425,10 +463,9 @@ function loadEnemyCars() {
     coin.y = 0;
 }
 
-//Moves the players character
+//This function moves the players character with the mouse
 function movePlayer(mousePos) {
-    var rect = stage.getBounds();
-
+    //Hide the mouse, it isn't needed for this game.
     stage.canvas.style.cursor = "none";
 
     //DO BOUNDING
@@ -436,56 +473,70 @@ function movePlayer(mousePos) {
     car.y = (480 - car.image.height());
 }
 
+//This function sets and displays the strings for HP and Score.
 function updateHealthOrScore() {
     //Display health
     postHP = new createjs.Text("HP:" + hp, "20px Consolas", "#FFFFFF");
     postHP.x = 0;
     postHP.y = 0;
 
-    //Post score
+    //Display score
     postScore = new createjs.Text("Score:" + score, "20px Consolas", "#FFFFFF");
     postScore.x = 90;
     postScore.y = 0;
 }
 
+//This function generates new enemies at random locations along the x plane, to "attack" the player, car 3 is special, because it also spawns a coin.
 function newEnemy(whichCar) {
+    //Clear the stage for the next load
     stage.clear();
 
+    //"whichCar" is used to tell this function which enemy is to be loaded. Each car has its own speed and colour.
     if (whichCar == 1) {
+        //The car is new, so it hasn't been hit
         carOneHit = false;
+
+        //The car is alive
         carOneAlive = true;
         enemyCarOne.y = 0;
-        posEnemyOne = Math.floor((Math.random() * 1260) + 1);
 
-        if (posEnemyOne == posEnemyTwo || posEnemyOne == posEnemyThree || posEnemyOne == posEnemyFour || posEnemyOne == posEnemyFive || posEnemyOne == posEnemySix)
-            newEnemy(1);
+        //Spawn it at a random x at the top of the screen.
+        posEnemyOne = Math.floor((Math.random() * 1260) + 1);
 
         stage.addChild(enemyCarOne);
     }
 
     if (whichCar == 2) {
+        //The car is new, so it hasn't been hit
         carTwoHit = false;
+
+        //The car is alive
         carTwoAlive = true;
         enemyCarTwo.y = 0;
-        posEnemyTwo = Math.floor((Math.random() * 1260) + 1);
 
-        if (posEnemyTwo == posEnemyOne || posEnemyTwo == posEnemyThree || posEnemyTwo == posEnemyFour || posEnemyTwo == posEnemyFive || posEnemyTwo == posEnemySix)
-            newEnemy(2);
+        //Spawn it at a random x at the top of the screen.
+        posEnemyTwo = Math.floor((Math.random() * 1260) + 1);
 
         stage.addChild(enemyCarTwo);
     }
 
     if (whichCar == 3) {
+        //The car is new, so it hasn't been hit
         carThreeHit = false;
+
+        //The car is alive
         carThreeAlive = true;
         enemyCarThree.y = 0;
+
+        //Spawn it at a random x at the top of the screen.
         posEnemyThree = Math.floor((Math.random() * 1260) + 1);
 
-        if (posEnemyThree == posEnemyTwo || posEnemyThree == posEnemyOne || posEnemyThree == posEnemyFour || posEnemyThree == posEnemyFive || posEnemyThree == posEnemySix)
-            newEnemy(3);
-
         coin.y = 0;
+
+        //Spawn it at a random x at the top of the screen.
         posCoin = Math.floor((Math.random() * 1260) + 1);
+
+        //The coin is alive
         coinAlive = true;
 
         stage.addChild(coin);
@@ -493,44 +544,52 @@ function newEnemy(whichCar) {
     }
 
     if (whichCar == 4) {
+        //The car is new, so it hasn't been hit
         carFourHit = false;
+
+        //The car is alive
         carFourAlive = true;
         enemyCarFour.y = 0;
-        posEnemyFour = Math.floor((Math.random() * 1260) + 1);
 
-        if (posEnemyFour == posEnemyOne || posEnemyFour == posEnemyThree || posEnemyFour == posEnemyTwo || posEnemyFour == posEnemyFive || posEnemyFour == posEnemySix)
-            newEnemy(4);
+        //Spawn it at a random x at the top of the screen.
+        posEnemyFour = Math.floor((Math.random() * 1260) + 1);
 
         stage.addChild(enemyCarFour);
     }
 
     if (whichCar == 5) {
+        //The car is new, so it hasn't been hit
         carFiveHit = false;
+
+        //The car is alive
         carFiveAlive = true;
         enemyCarFive.y = 0;
-        posEnemyFive = Math.floor((Math.random() * 1260) + 1);
 
-        if (posEnemyFive == posEnemyTwo || posEnemyFive == posEnemyThree || posEnemyFive == posEnemyFour || posEnemyFive == posEnemyOne || posEnemyFive == posEnemySix)
-            newEnemy(5);
+        //Spawn it at a random x at the top of the screen.
+        posEnemyFive = Math.floor((Math.random() * 1260) + 1);
 
         stage.addChild(enemyCarFive);
     }
 
     if (whichCar == 6) {
+        //The car is new, so it hasn't been hit
         carSixHit = false;
+
+        //The car is alive
         carSixAlive = true;
         enemyCarSix.y = 0;
-        posEnemySix = Math.floor((Math.random() * 1260) + 1);
 
-        if (posEnemySix == posEnemyTwo || posEnemySix == posEnemyThree || posEnemySix == posEnemyFour || posEnemySix == posEnemyFive || posEnemySix == posEnemyOne)
-            newEnemy(6);
+        //Spawn it at a random x at the top of the screen.
+        posEnemySix = Math.floor((Math.random() * 1260) + 1);
 
         stage.addChild(enemyCarSix);
     }
 
+    //Set the car to 0 so this function doesn't trigger again until there is a new car needed
     whichCar = 0;
 }
 
+//This function moves the enemies (and coin) down the road toward the player and when they are off screen (dead), it spawns the next enemy in line.
 function manageEnemiesAndCoins() {
     //Create new enemies as others "die"
     if (enemyCarOne.y >= 600) {
@@ -569,6 +628,7 @@ function manageEnemiesAndCoins() {
         carSixAlive = false;
     }
 
+    //Move the coin
     if (coin.y >= 500) {
         coin.y = -200;
         coinAlive = false;
@@ -605,6 +665,7 @@ function manageEnemiesAndCoins() {
         enemyCarSix.x = posEnemySix;
     }
 
+    //move the "living" coin
     if (coinAlive == true) {
         coin.y += 15;
         coin.x = posCoin;
