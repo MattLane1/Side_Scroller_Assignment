@@ -1,5 +1,23 @@
 ﻿//Assignment Three Comp 2068 Advanced Web Programming
+//Game.ts (the game class)
 //Matthew Lane (200214586)
+//Last Modified By Matthew Lane (200214586)
+//Last modified Mar, 23rd, 2015
+//Description: This program is a game called "Road Rage". The objective is to collect the coins, while dodging enemy cars.
+/*Revision History
+Version:
+1 Added a background and player character to mouse position.
+2 Added moving enemies, no form of collision detection yet.
+3 Added in a second enemy tracked independently.
+4 Fixed glitch, cars now move steadily to the bottom and re-spawn at the top.
+5 Added more enemies (total of 6) and adjusted their speed.
+6 Added initial hit detection. Needs work.
+7 Got scoring working on the first car.
+8 Adjusted Speed, made several small changes to improve performance.
+9 Fixed collision detection, it is now very accurate.
+10 Game now functional. Can be won or lost, scoring and collision working great!
+11 Added start and end screens. The game is now complete.
+*/
 //Create stage and canvas
 var canvas;
 var stage;
@@ -65,7 +83,6 @@ var carSixHit;
 var postHP;
 var postReset;
 var postScore;
-var postWelcome;
 var postInstructions;
 var postWinLoose;
 
@@ -186,6 +203,7 @@ function resetGame() {
     beginGame();
 }
 
+//This function starts the game. It loads enemies, the background etc.
 function beginGame() {
     //Add in the background
     background = new createjs.Bitmap("assets/images/road.jpg");
@@ -207,7 +225,7 @@ function beginGame() {
     updateHealthOrScore();
 }
 
-//The Game Loop
+//The Game Loop, called every tick.
 function gameLoop() {
     //Hide the cursor (we don't need it)
     stage.canvas.style.cursor = "none";
@@ -271,6 +289,7 @@ function gameLoop() {
     }
 }
 
+//This function loads images to the stage. It prepares the stage to host the game.
 function setStage() {
     //Clear the stage first
     stage.clear();
@@ -310,6 +329,7 @@ function setStage() {
     stage.update(); // Refreshes our stage
 }
 
+//This function checks for collisions.
 function manageColisions() {
     //Get player location
     carRect = car.getTransformedBounds();
@@ -410,7 +430,7 @@ function hitTestPoint(x1, y1, w1, h1, x2, y2) {
         return false;
 }
 
-//Get and return the position of the mouse
+//This function gets and returns the position of the mouse
 function getMousePos(canvas, evt) {
     return {
         x: evt.clientX,
@@ -418,7 +438,7 @@ function getMousePos(canvas, evt) {
     };
 }
 
-//Load, size and position the enemy cars
+//This function loads, sizes and positions the enemy cars
 function loadEnemyCars() {
     //Create enemy one
     enemyCarOne = new createjs.Bitmap("assets/images/enemyOne.png");
